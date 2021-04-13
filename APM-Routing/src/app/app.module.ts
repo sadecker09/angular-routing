@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { ProductData } from './products/product-data';
 
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { WelcomeComponent } from './home/welcome.component';
 import { PageNotFoundComponent } from './page-not-found.component';
@@ -14,36 +15,21 @@ import { PageNotFoundComponent } from './page-not-found.component';
 import { ProductModule } from './products/product.module';
 import { UserModule } from './user/user.module';
 import { MessageModule } from './messages/message.module';
-import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
     BrowserModule,
     HttpClientModule,
     InMemoryWebApiModule.forRoot(ProductData, { delay: 1000 }),
-    // note that any routes delcared in feature modules will be processed first,
-    // then the routes declared here in .forRoot will be processed
-    // so wildcard will always be processed last
-    RouterModule.forRoot([
-      {
-        path: 'welcome',
-        component: WelcomeComponent,
-      },
-      // this is the default route (when app first loads)
-      {
-        path: '',
-        redirectTo: 'welcome',
-        pathMatch: 'full',
-      },
-      {
-        path: '**',
-        component: PageNotFoundComponent,
-      },
-    ]),
     ProductModule,
     UserModule,
     MessageModule,
+    // needs to be ordered last so that wildcard route is processed last
+    // (so that feature routes are processed before routes in AppRoutingModule)
+    AppRoutingModule,
   ],
+  // these declared components have access to router directives b/c
+  // AppRoutingModule exports the RouterModule
   declarations: [AppComponent, WelcomeComponent, PageNotFoundComponent],
   bootstrap: [AppComponent],
 })
