@@ -10,7 +10,7 @@ export class AuthService {
   currentUser: User;
 
   get isLoggedIn(): boolean {
-    return !!this.currentUser;
+    return !!this.currentUser; // double bang coerces to bool
   }
 
   constructor(private messageService: MessageService) { }

@@ -8,6 +8,7 @@ import { ProductEditTagsComponent } from './product-edit/product-edit-tags.compo
 import { ProductResolver } from './product-resolver.service';
 import { SharedModule } from '../shared/shared.module';
 import { RouterModule } from '@angular/router';
+import { AuthGuard } from '../user/auth.guard';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { RouterModule } from '@angular/router';
     RouterModule.forChild([
       {
         path: 'products', //componentless route
+        canActivate: [AuthGuard],
         children: [
           {
             path: '',
