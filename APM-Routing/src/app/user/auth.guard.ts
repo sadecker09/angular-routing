@@ -5,6 +5,8 @@ import {
   RouterStateSnapshot,
   UrlTree,
   Router,
+  CanLoad,
+  Route,
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
@@ -12,7 +14,7 @@ import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard implements CanActivate {
+export class AuthGuard implements CanActivate, CanLoad {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(
@@ -26,7 +28,11 @@ export class AuthGuard implements CanActivate {
     return this.checkLoggedIn(state.url);
   }
 
-  checkLoggedIn(url:string): boolean {
+  canLoad(route: Route): boolean {
+    return this.checkLoggedIn(route.path);
+  }
+
+  checkLoggedIn(url: string): boolean {
     if (this.authService.isLoggedIn) {
       return true;
     }
