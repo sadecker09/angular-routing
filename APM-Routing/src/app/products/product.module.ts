@@ -8,7 +8,6 @@ import { ProductEditTagsComponent } from './product-edit/product-edit-tags.compo
 import { ProductResolver } from './product-resolver.service';
 import { SharedModule } from '../shared/shared.module';
 import { RouterModule } from '@angular/router';
-import { AuthGuard } from '../user/auth.guard';
 import { ProductEditGuard } from './product-edit/product-edit.guard';
 
 @NgModule({
@@ -17,38 +16,32 @@ import { ProductEditGuard } from './product-edit/product-edit.guard';
     // use forChild because defining feature routes (root routes defined in app.module)
     RouterModule.forChild([
       {
-        path: 'products', //componentless route
-        canActivate: [AuthGuard],
+        path: '',
+        component: ProductListComponent,
+      },
+      {
+        path: ':id',
+        component: ProductDetailComponent,
+        resolve: { resolvedData: ProductResolver },
+      },
+      {
+        path: ':id/edit',
+        component: ProductEditComponent,
+        canDeactivate: [ProductEditGuard],
+        resolve: { resolvedData: ProductResolver },
         children: [
           {
             path: '',
-            component: ProductListComponent,
+            redirectTo: 'info',
+            pathMatch: 'full',
           },
           {
-            path: ':id',
-            component: ProductDetailComponent,
-            resolve: { resolvedData: ProductResolver },
+            path: 'info',
+            component: ProductEditInfoComponent,
           },
           {
-            path: ':id/edit',
-            component: ProductEditComponent,
-            canDeactivate: [ProductEditGuard],
-            resolve: { resolvedData: ProductResolver },
-            children: [
-              {
-                path: '',
-                redirectTo: 'info',
-                pathMatch: 'full',
-              },
-              {
-                path: 'info',
-                component: ProductEditInfoComponent,
-              },
-              {
-                path: 'tags',
-                component: ProductEditTagsComponent,
-              },
-            ],
+            path: 'tags',
+            component: ProductEditTagsComponent,
           },
         ],
       },

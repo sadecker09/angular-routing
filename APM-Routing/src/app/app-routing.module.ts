@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { WelcomeComponent } from './home/welcome.component';
 import { PageNotFoundComponent } from './page-not-found.component';
+import { AuthGuard } from './user/auth.guard';
 
 @NgModule({
   imports: [
@@ -15,6 +16,12 @@ import { PageNotFoundComponent } from './page-not-found.component';
         path: '',
         redirectTo: 'welcome',
         pathMatch: 'full',
+      },
+      {
+        path: 'products',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('./products/product.module').then((m) => m.ProductModule),
       },
       {
         path: '**',
